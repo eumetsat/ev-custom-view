@@ -9,8 +9,6 @@ the attributes of the vector features under the cursor and the values of the vis
 
 This code is licensed under an MIT license. See file LICENSE.txt for details on the usage and distribution terms.
 
-All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only
-
 ## Authors
 
 - [**Niklas Jordan**](mailto://niklas.jordan@external.eumetsat.int) - *Initial work* - [EUMETSAT](http://www.eumetsat.int)
@@ -34,16 +32,14 @@ A web server is needed because browsers do not let a page opened straight from d
 ## Files
 
 - `view.html` – the viewer: map, layer panel, time slider and point info, with all the code
-- `layers.yaml` – the title and the layers
+- `layers.yaml` – the title and the layers configuration
 
-## Dependencies
-
-All libraries are loaded from a CDN at runtime; nothing needs to be installed.
-
-| Library | Version | Purpose | Licence |
-|---|---|---|---|
-| [MapLibre GL JS](https://maplibre.org/) | 5.24.0 | map | BSD-3-Clause |
-| [maplibre-gl-opacity](https://github.com/mug-jp/maplibre-gl-opacity) | 1.8.0 | layer chooser | MIT |
-| [maplibre-gl-time-slider](https://www.npmjs.com/package/maplibre-gl-time-slider) | 0.4.0 | time slider | MIT |
-| [geotiff.js](https://geotiffjs.github.io/) | 2.1.3 | reads the WCS answers | MIT |
-| [js-yaml](https://github.com/nodeca/js-yaml) | 4.1.0 | reads `layers.yaml` | MIT |
+### Dependencies
+The following dependencies are not included in the package but they are required and will be downloaded at runtime, when the page loads in the browser:
+| dependency              | version | license      | copyright                                    | home\_url                                                                                                  | comments              |
+| ----------------------- | ------- | ------------ | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------- |
+| maplibre-gl             | 5.24.0  | BSD-3-Clause | 2023, MapLibre contributors                  | [https://github.com/maplibre/maplibre-gl-js](https://github.com/maplibre/maplibre-gl-js)                                      | map                   |
+| maplibre-gl-opacity     | 1.8.0   | MIT          | 2021-2025 Yasunori Kirimoto, Kanahiro Iguchi | [https://github.com/dayjournal/maplibre-gl-opacity](https://github.com/dayjournal/maplibre-gl-opacity)     | layer chooser         |
+| maplibre-gl-time-slider | 0.4.0   | MIT          | 2026 Open Geospatial Solutions               | [https://github.com/opengeos/maplibre-gl-time-slider](https://github.com/opengeos/maplibre-gl-time-slider) | time slider           |
+| geotiff                 | 2.1.3   | MIT          | 2015 EOX IT Services GmbH                    | [https://github.com/geotiffjs/geotiff.js](https://github.com/geotiffjs/geotiff.js)                         | reads the WCS answers |
+| js-yaml                 | 4.1.0   | MIT          | 2011-2015 by Vitaly Puzrin                   | [https://github.com/nodeca/js-yaml](https://github.com/nodeca/js-yaml)                                     | reads `layers.yaml`   |
