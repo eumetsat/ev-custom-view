@@ -1,0 +1,14 @@
+# Component information
+name: ev-custom-views
+description: Demo application of how to use the EUMETView APIs to build custom, mobile-friendly viewers.
+copyright: 2026 EUMETSAT
+license_spdx: MIT
+home_url:
+date: 2026-11-12
+ 
+# Package IPR documentation
+license_text_file: LICENCE.txt
+ 
+# File(s) associated to this component
+about_resource: view.html
+about_resource: layers.yaml

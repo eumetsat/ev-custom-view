@@ -1,0 +1,72 @@
+# Settings of the view. Edit this file to change the title or to add, remove, rename or reorder layers; the page reads it at start.
+#
+# viewerName: title of the page (browser tab)
+#
+# base:     one radio button each; the one with "default: true" (else the first) is shown at start. All follow the time slider.
+# overlays: one checkbox each, listed top-most first.
+#
+# Fields:
+#   name     name shown in the layer panel
+#   id       layer name on the EUMETSAT GeoServer, e.g. mtg_fd:frp
+#   type     wms (raster image, the default), wfs (vector features: points, lines or polygons, clickable)
+#            or wcs (raster image whose values are shown when clicking the map; its coverage is id with "__" for ":")
+#   style    WMS style name (default: the layer's default style)
+#   attr     data credit (default: none)
+#   timed    true -> follows the time slider (default for overlays: false)
+#   step     minutes between the layer's time slots when not 10
+#   default  true -> shown at start
+
+viewerName: EV Custom View
+
+base:
+  - name: GeoColour RGB
+    id: mtg_fd:rgb_geocolour
+    default: true
+  - name: 0.6 µm
+    id: mtg_fd:vis06_hrfi
+  - name: 10.5 µm – Greyscale
+    id: mtg_fd:ir105_hrfi
+    style: mtg_fd_ir105_hrfi_grayscale
+  - name: 10.5 µm – Colour 1
+    id: mtg_fd:ir105_hrfi
+    style: mtg_fd_ir105_hrfi_style_01
+  - name: 10.5 µm – Colour 2
+    id: mtg_fd:ir105_hrfi
+    style: mtg_fd_ir105_hrfi_style_02
+  - name: True Colour RGB
+    id: mtg_fd:rgb_truecolour
+  - name: Cloud Phase RGB
+    id: mtg_fd:rgb_cloudphase
+  - name: Cloud Type RGB
+    id: mtg_fd:rgb_cloudtype
+  - name: Dust RGB
+    id: mtg_fd:rgb_dust
+  - name: Fire temp RGB
+    id: mtg_fd:rgb_firetemperature
+  - name: Fog RGB
+    id: mtg_fd:rgb_fog
+  - name: Snow RGB
+    id: mtg_fd:rgb_snow
+
+overlays:
+  - name: Fire FRP points
+    id: mtg_fd:frp
+    type: wfs
+    timed: true
+  - name: Boundaries
+    id: osmgray:ne_10m_admin_0_boundary_lines_land
+    style: osmgray:all_boundaries_light
+    default: true
+  - name: Coasts
+    id: backgrounds:ne_10m_coastline
+    style: whitelines
+    default: true
+  - name: Precipitation
+    id: mtg_fd:h40b
+    type: wcs
+    attr: H-SAF
+  - name: LI AFA
+    id: mtg_fd:li_afa
+  - name: Fire FRP
+    id: mtg_fd:frp
+    timed: true

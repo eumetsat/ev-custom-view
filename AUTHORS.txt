@@ -1,0 +1,9 @@
+# Copyright holder
+EUMETSAT
+ 
+# List of development authors
+Niklas Jordan, niklas.jordan@external.eumetsat.int (under contract EUM/CO/22/4600002707/CBe)
+
+# Contributory authors
+Anna-Sophia Bohl
+Mark Higgins
