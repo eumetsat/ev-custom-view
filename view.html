@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ASMET View</title>
 
-<!-- MapLibre GL JS, plus two plugins: layer chooser (maplibre-gl-opacity) and time slider (maplibre-gl-time-slider),
-     geotiff.js to read the WCS answers and js-yaml to read the layer list (layers.yaml) -->
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl-opacity@1.8.0/build/maplibre-gl-opacity.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl-time-slider@0.4.0/dist/maplibre-gl-time-slider.css">
@@ -16,8 +14,6 @@
 <script src="https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 
 <style>
-  /* Material look after Google Maps: Roboto-first sans-serif, white cards with soft shadows, round icon buttons, blue accent.
-     Light style everywhere, also inside the plugins (which otherwise follow a dark system theme / default font). */
   :root { --blue: #1a73e8; --blue-tint: #e8f0fe; --text: #202124; --text-2: #5f6368; --line: #dadce0; --hover: #f1f3f4;
     --shadow: 0 1px 2px rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15); }
   html { color-scheme: light; background: #fff; color: var(--text); }
@@ -29,11 +25,9 @@
     --ts-btn-active-bg: var(--line); --ts-input-bg: #fff; --ts-input-border: var(--line); --ts-accent: var(--blue); --ts-accent-hover: #1967d2;
     --ts-accent-active: #185abc; --ts-accent-ring: rgba(26, 115, 232, .2); }
   html, body { height: 100%; margin: 0; }
-  /* Page: map with the layer panel beside it; the time slider floats on the map */
   body { display: flex; flex-direction: column; }
   #main { display: flex; flex: 1; min-height: 0; }
   #map { flex: 1; min-width: 0; height: 100%; }
-  /* Layer panel right of the map, like a mobile navigation: toggled by the ☰ map button, full width on phones */
   #panel { flex: none; width: 300px; overflow-y: auto; box-shadow: 0 0 8px rgba(0, 0, 0, .15); z-index: 1; font-size: 14px; }
   #panel header, #panel h2 { display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 0 8px 0 24px; }
   #panel header { height: 56px; font-size: 18px; font-weight: 500; border-bottom: 1px solid var(--line); }
@@ -41,13 +35,11 @@
   #panel header button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--text-2); font-size: 22px; cursor: pointer; }
   #panel header button:hover { background: var(--hover); }
   @media (max-width: 600px) { #panel { width: 100%; } }
-  /* One full-width row per layer (the input sits inside its label): 48px, grey on hover, blue tint when selected */
   #opacity-control { width: auto; padding: 8px 0; }
   #opacity-control label { display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 0 24px; color: #3c4043; cursor: pointer; }
   #opacity-control label:hover { background: var(--hover); }
   #opacity-control label:has(:checked) { background: var(--blue-tint); color: var(--blue); }
   #opacity-control input { margin: 0; width: 18px; height: 18px; accent-color: var(--blue); }
-  /* Map controls: white cards with soft shadow and 40px buttons; the Layers button is a pill */
   .maplibregl-ctrl-group { border-radius: 8px; }
   .maplibregl-ctrl-group:not(:empty) { box-shadow: var(--shadow); }
   .maplibregl-ctrl-group button { width: 40px; height: 40px; }
@@ -56,7 +48,6 @@
   #menu, #menu button { border-radius: 20px; }
   #menu button { width: auto; padding: 0 16px 0 12px; font: 500 14px/40px Roboto, "Segoe UI", system-ui, Arial, sans-serif; color: #3c4043; }
   #menu button span { font-size: 18px; margin-right: 8px; vertical-align: -1px; }
-  /* Point info: a round info button that opens into a card with the readings and the credits */
   #point-info { padding: 0; max-width: 280px; max-height: calc(100vh - 110px); overflow: auto; border-radius: 20px; font-size: 13px; line-height: 1.7; color: #3c4043; }
   #point-info summary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 40px; height: 40px; list-style: none;
     font-size: 14px; font-weight: 500; cursor: pointer; }
@@ -68,15 +59,13 @@
   #point-info footer { padding-top: 6px; border-top: 1px solid var(--line); font-size: 11px; line-height: 1.5; color: var(--text-2); }
   #point-info hr { margin: 6px 0; border: 0; border-top: 1px solid var(--line); }
   #point-info u { text-decoration: none; font-weight: 500; color: var(--text-2); }
-  /* Time slider: a pill floating at the bottom of the map with round icon buttons, a slim blue range and the label on one line.
-     The plugin's own toggle button, header and speed/loop settings are hidden; its inline size/position is overridden. */
   .time-slider-control, .time-slider-control-header, .time-slider-settings { display: none; }
   .time-slider-control-panel { left: 50% !important; bottom: 24px !important; transform: translateX(-50%); width: min(640px, calc(100% - 32px)) !important;
     max-width: none; box-sizing: border-box; padding: 0 8px; border-radius: 24px; box-shadow: var(--shadow); }
   .time-slider-control-content { flex-direction: row; align-items: center; gap: 12px; height: 48px; padding: 0 8px; }
-  @media (max-width: 600px) { .time-slider-control-panel { bottom: 8px !important; width: calc(100% - 16px) !important; } }   /* phones: pill at the bottom edge */
+  @media (max-width: 600px) { .time-slider-control-panel { bottom: 8px !important; width: calc(100% - 16px) !important; } }
   .time-slider-controls { order: -1; gap: 4px; }
-  .time-slider-control-content .time-slider-btn { flex: none; width: 40px; height: 40px; padding: 0; font-size: 0; color: var(--text-2); border-radius: 50%; }   /* icons only */
+  .time-slider-control-content .time-slider-btn { flex: none; width: 40px; height: 40px; padding: 0; font-size: 0; color: var(--text-2); border-radius: 50%; }
   .time-slider-btn-icon { font-size: 16px; }
   .time-slider-range { flex: 1; height: 3px; margin: 0; }
   .time-slider-range::-webkit-slider-thumb { width: 14px; height: 14px; border-width: 2px; box-shadow: var(--shadow); }
@@ -95,21 +84,16 @@
 <script type="module">
 import { TimeSliderControl } from 'https://unpkg.com/maplibre-gl-time-slider@0.4.0/dist/index.mjs';
 
-// GeoServer endpoint, serves WMS, WFS and WCS
 const EUM_OWS = 'https://view.eumetsat.int/geoserver/ows';
 
-// Time window: two hours in 10-minute steps
 const STEP_MS = 10 * 60 * 1000;
 const STEPS = 13;
 
-// The title and the layers come from layers.yaml (see the comments there). Here each gets an element id, and its GeoServer name moves to
-// "layer". Base layers follow the time slider and are JPEG images.
 const { viewerName, base, overlays } = jsyaml.load(await fetch('layers.yaml').then(r => r.text()));
 if (viewerName) document.title = viewerName;
 const BASE_LAYERS = base.map((def, i) => ({ type: 'wms', ...def, layer: def.id, id: `base-${i}`, attr: 'EUMETSAT', format: 'image/jpeg', timed: true }));
 const OVERLAYS = overlays.map((def, i) => ({ type: 'wms', ...def, layer: def.id, id: `over-${i}` }));
 
-// GetMap URL template for a layer, optionally at a given time
 function wmsTiles(def, time, size = 512) {
   const p = new URLSearchParams({
     service: 'WMS', version: '1.1.1', request: 'GetMap',
@@ -120,10 +104,8 @@ function wmsTiles(def, time, size = 512) {
   return [`${EUM_OWS}?${p}&bbox={bbox-epsg-3857}`];
 }
 
-// Round a slider time down to the layer's own time step
 const slot = (def, time) => new Date(Math.floor(time / ((def.step || 10) * 60000)) * ((def.step || 10) * 60000));
 
-// GetFeature URL (GeoJSON) for a WFS layer, optionally at a given time slot
 function wfsData(def, time) {
   const p = new URLSearchParams({
     service: 'WFS', version: '2.0.0', request: 'GetFeature', typeNames: def.layer,
@@ -133,8 +115,6 @@ function wfsData(def, time) {
   return `${EUM_OWS}?${p}`;
 }
 
-// Info rows for a WCS coverage at a point and time slot: the time and the value of every band, read from a
-// one-cell GeoTIFF. The time is always sent: without it the server does not answer with the newest slot.
 async function wcsRows(def, { lng, lat }, time) {
   const t = slot(def, time);
   const p = new URLSearchParams({ service: 'WCS', version: '2.0.1', request: 'GetCoverage', coverageId: def.layer.replace(':', '__'), format: 'image/tiff' });
@@ -143,22 +123,20 @@ async function wcsRows(def, { lng, lat }, time) {
   p.append('subset', `time("${t.toISOString()}")`);
   const r = await fetch(`${EUM_OWS}?${p}`);
   let values = [];
-  if (r.headers.get('content-type')?.includes('tiff')) {    // otherwise an error report, e.g. outside the coverage
+  if (r.headers.get('content-type')?.includes('tiff')) {
     const img = await (await GeoTIFF.fromArrayBuffer(await r.arrayBuffer())).getImage();
     values = (await img.readRasters()).map(band => band[0] === img.getGDALNoData() ? 'no data' : +band[0].toFixed(3));
   }
   return [['time', t.toISOString()], ...def.fields.map((f, i) => [f, values[i] ?? 'no data'])];
 }
-// Band names + units (for the popup) and newest time of a WCS coverage, asked via DescribeCoverage
 async function wcsInfo(def) {
   const xml = await fetch(`${EUM_OWS}?service=WCS&version=2.0.1&request=DescribeCoverage&coverageId=${def.layer.replace(':', '__')}`).then(r => r.text());
   return { fields: [...xml.matchAll(/swe:field name="([^"]*)"[^]*?swe:uom code="([^"]*)"/g)].map(m => `${m[1]} [${m[2]}]`),
            latest: new Date(xml.match(/endPosition>([^<]*)/)[1]) };
 }
 
-// WFS layers are drawn as circles, fills or lines depending on their geometry type (asked via DescribeFeatureType)
 const WFS_PAINT = {
-  circle: { 'circle-radius': 5, 'circle-opacity': 0, 'circle-stroke-color': '#ff3b00', 'circle-stroke-width': 1.5 },   // hollow ring
+  circle: { 'circle-radius': 5, 'circle-opacity': 0, 'circle-stroke-color': '#ff3b00', 'circle-stroke-width': 1.5 },
   fill:   { 'fill-color': '#ff3b00', 'fill-opacity': 0.3, 'fill-outline-color': '#ff3b00' },
   line:   { 'line-color': '#ff3b00', 'line-width': 2 },
 };
@@ -168,8 +146,6 @@ async function wfsKind(def) {
   return /Point/.test(geom) ? 'circle' : /Surface|Polygon/.test(geom) ? 'fill' : 'line';
 }
 
-// The newest 10-minute slots have no image yet (the server answers with an error instead of a picture),
-// so ask for a tiny image of the last few slots and end the time window at the newest one that exists.
 async function newestAvailable(def) {
   const now = Math.floor(Date.now() / STEP_MS) * STEP_MS;
   const slots = [0, 1, 2, 3, 4, 5].map(k => now - k * STEP_MS);
@@ -182,7 +158,7 @@ async function newestAvailable(def) {
 const map = new maplibregl.Map({
   container: 'map',
   center: [0, 0],
-  zoom: 4,                    // equals Leaflet zoom 5
+  zoom: 4,
   maxZoom: 10,
   dragRotate: false,
   attributionControl: false,
@@ -193,18 +169,16 @@ const menu = Object.assign(document.createElement('div'), { id: 'menu', classNam
 map.addControl({ onAdd: () => menu, onRemove: () => menu.remove() }, 'top-right');
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
 map.addControl(new maplibregl.FullscreenControl(), 'top-left');
-map.on('error', () => {});    // a time step without an image is not worth a console error
+map.on('error', () => {});
 
-// Centre on the user's position if they allow it (as Leaflet's locate({setView: true, maxZoom: 5}))
 navigator.geolocation?.getCurrentPosition(pos => map.jumpTo({ center: [pos.coords.longitude, pos.coords.latitude], zoom: 4 }));
 
 const [end] = await Promise.all([newestAvailable(BASE_LAYERS[0]), map.once('load'),
   ...OVERLAYS.filter(d => d.type === 'wfs').map(async d => d.kind = await wfsKind(d)),
   ...OVERLAYS.filter(d => d.type === 'wcs').map(async d => Object.assign(d, await wcsInfo(d)))]);
 const times = Array.from({ length: STEPS }, (_, i) => new Date(end - (STEPS - 1 - i) * STEP_MS));
-let current = STEPS - 1;    // slider position
+let current = STEPS - 1;
 
-// One layer per product, drawn bottom-up: base layers first, then the overlays in reverse list order
 const layers = [...BASE_LAYERS, ...[...OVERLAYS].reverse()];
 for (const def of layers) {
   if (def.type === 'wfs') {
@@ -218,29 +192,23 @@ for (const def of layers) {
   }
 }
 
-
-// Layer chooser (plugin): shows the first base layer and hides everything else when added
 map.addControl(new OpacityControl({
   baseLayers: Object.fromEntries(BASE_LAYERS.map(d => [d.id, d.name])),
   overLayers: Object.fromEntries(OVERLAYS.map(d => [d.id, d.name])),
 }), 'top-right');
-layers.filter(d => d.default).forEach(d => document.getElementById(d.id).click());   // layers shown at start
-// Move the chooser out of the map into the side panel, which starts open on wide screens
-panel.append(Object.assign(document.getElementById('opacity-control'), { className: '' }));   // drop the map-control box styling
-for (const input of panel.querySelectorAll('input')) input.nextElementSibling.prepend(input);   // input inside its label: whole row clickable
+layers.filter(d => d.default).forEach(d => document.getElementById(d.id).click());
+panel.append(Object.assign(document.getElementById('opacity-control'), { className: '' }));
+for (const input of panel.querySelectorAll('input')) input.nextElementSibling.prepend(input);
 panel.querySelectorAll('br').forEach(br => br.remove());
-panel.querySelector('hr').replaceWith(Object.assign(document.createElement('h2'), { textContent: 'Overlays' }));   // section title
+panel.querySelector('hr').replaceWith(Object.assign(document.createElement('h2'), { textContent: 'Overlays' }));
 panel.hidden = innerWidth <= 600;
 
-// Point info panel (top right, under the layer chooser) and a marker on the clicked point
 const info = Object.assign(document.createElement('details'), { id: 'point-info', className: 'maplibregl-ctrl maplibregl-ctrl-group',
   innerHTML: '<summary title="Point info"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg></summary>'
     + '<div>Click the map</div><footer>Data: EUMETSAT, H-SAF · Map: MapLibre</footer>' });
 map.addControl({ onAdd: () => info, onRemove: () => info.remove() }, 'top-right');
 const marker = new maplibregl.Marker({ color: '#ea4335' });
 
-// Click: mark the point (snapped to a WFS point if one was hit) and list, per layer, the attributes of the WFS
-// features under the cursor and the values of the visible WCS coverages
 const wfsLayers = layers.filter(d => d.type === 'wfs').map(d => d.id);
 map.on('click', async e => {
   const feats = map.queryRenderedFeatures(e.point, { layers: wfsLayers });
@@ -249,7 +217,7 @@ map.on('click', async e => {
   const groups = feats.map(f => [layers.find(d => d.id === f.layer.id).name, Object.entries(f.properties)]);
   for (const d of layers.filter(d => d.type === 'wcs' && map.getLayoutProperty(d.id, 'visibility') === 'visible'))
     groups.push([d.name, await wcsRows(d, e.lngLat, d.timed ? times[current] : d.latest)]);
-  info.open = true;   // collapsed until the first click
+  info.open = true;
   info.querySelector('div').innerHTML = `<b>Lon</b> ${at[0].toFixed(4)} <b>Lat</b> ${at[1].toFixed(4)}`
     + groups.map(([name, rows]) => `<hr><u>${name}</u><br>` + rows.map(([k, v]) => `<b>${k}</b> ${v}`).join('<br>')).join('');
 });
@@ -258,8 +226,7 @@ for (const id of wfsLayers) {
   map.on('mouseleave', id, () => map.getCanvas().style.cursor = '');
 }
 
-// Time slider (plugin): on every step, point the time-enabled layers at the new time
-const label = d => innerWidth > 600 ? d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC' : d.toISOString().slice(11, 16);   // phones: time only
+const label = d => innerWidth > 600 ? d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC' : d.toISOString().slice(11, 16);
 const slider = new TimeSliderControl({
   title: 'Image time',
   labels: times.map(label),
@@ -272,7 +239,6 @@ const slider = new TimeSliderControl({
     : map.getSource(d.id).setTiles(wmsTiles(d, times[current = i]))),
 });
 map.addControl(slider, 'bottom-left');
-// The plugin closes its panel on any click elsewhere (map, layer chooser); keep it open instead.
 document.removeEventListener('click', slider._clickOutsideHandler);
 </script>
 </body>
