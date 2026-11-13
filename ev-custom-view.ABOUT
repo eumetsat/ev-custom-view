@@ -3,7 +3,7 @@ name: ev-custom-views
 description: Demo application of how to use the EUMETView APIs to build custom, mobile-friendly viewers.
 copyright: 2026 EUMETSAT
 license_spdx: MIT
-home_url:
+home_url: https://gitlab.eumetsat.int/eo-lab-usc-open/data-services/ev-custom-view
 date: 2026-11-12
  
 # Package IPR documentation
